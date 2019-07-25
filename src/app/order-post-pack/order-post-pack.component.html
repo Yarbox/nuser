@@ -5,7 +5,6 @@
           <div class="title-spa">فرم ثبت سفارش</div>
           <button class="fav-form-admin btn btn-success"><i class="fa fa-bookmark"></i>لیست آدرس های منتخب</button>
           <form  name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" >
-              <!-- {{ mainPacks | json}}<br> {{Origin | json}}<br> {{destinationModel | json}}<br> -->
               <div class="order-form-field">
                   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                       <h3 class="titr-order-form">مبدا</h3>
@@ -35,12 +34,9 @@
                       <h3 class="titr-order-form">مقصد</h3>
                   </div>
                   <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                      <select (change)="SelectProvince($event.target.value)" #ProvinceSelect>             
-                          <option >
-                              <p *ngIf="destinationModel.province!=undefined"> {{destinationModel.province}}</p>
-                              <p *ngIf="destinationModel.province==undefined"> استان</p>
-                          </option>
+                      <select (change)="SelectProvince($event.target.value)" #ProvinceSelect name="province"  [(ngModel)]="destinationModel.province">             
                           <!-- <option *ngFor="let item of Provinces" value="{{item}}">  {{item}} </option> -->
+                          <option   value='استان'> استان </option>
                           <option   value='آذربایجان شرقی'>  آذربایجان شرقی </option>
                           <option   value='آذربایجان غربی'>  آذربایجان غربی </option>
                           <option   value='اردبیل'>  اردبیل </option>
@@ -75,11 +71,8 @@
                       <div *ngIf="f.submitted &&  (destinationModel.province=='استان' || destinationModel.province==undefined)" class="error-webapp error-webapp3"> استان را وارد کنید </div>
                   </div>
                   <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                      <select (change)="SelectCity($event.target.value)">            
-                          <option>
-                                  <p *ngIf="destinationModel.city!=undefined"> {{destinationModel.city}}</p>
-                                  <p *ngIf="destinationModel.city==undefined"> شهر</p>
-                              </option>
+                      <select (change)="SelectCity($event.target.value)" [(ngModel)]="destinationModel.city" name="city">            
+                        <option   value='شهر'>  شهر </option>
                           <option *ngFor="let city of Cities" value="{{city.name}}">{{city.name}}</option>
                       </select>
                       <div *ngIf="f.submitted &&  (destinationModel.city=='شهر' || destinationModel.city==undefined)" class="error-webapp error-webapp3">شهر را وارد کنید </div>
@@ -154,10 +147,10 @@
                       <input type="checkbox"   [checked]="mainPacks.isInsurance"   (click)="InsuranceStatus($event)" id="bime-form-admin" class="check-radio-order" /><label for="bime-form-admin" class="text">بیمه</label>
 
                   </div>
-                  <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                  <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" *ngIf="mainPacks.isInsurance==true">
 
                       <input name="insurancePrice"   type="text" placeholder="ارزش مرسوله" [hidden]="!mainPacks.isInsurance==true" required [(ngModel)]="mainPacks.insurancePrice" name="insurancePrice" #insurancePrice="ngModel" pattern="^\d+$"  />
-                      <div *ngIf="f.submitted && insurancePrice.invalid && mainPacks.isInsurance==true" class="invalid-feedback">
+                      <div *ngIf="f.submitted && insurancePrice.invalid  " class="invalid-feedback">
                             <div *ngIf="insurancePrice.errors.required" class="arzesh-pack">ارزش مرسوله خود را وارد کنید</div>
                             <div [hidden]="!insurancePrice.errors.pattern" class="error-webapp">لطفا عدد وارد کنید</div>
 

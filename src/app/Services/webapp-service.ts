@@ -21,6 +21,7 @@ constructor(private _http:HttpClient ){
  
  
  PostPackSpa(model){
+   debugger
    let headers = new HttpHeaders();
    headers = headers.set('Authorization', 'bearer ' + localStorage.getItem("access_token"));
    headers = headers.set('Content-Type', 'application/json; charset=utf-8');

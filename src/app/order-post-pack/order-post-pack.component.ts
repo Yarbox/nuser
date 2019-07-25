@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MainPacks } from '../Model/dto/Main-Packs-dto';
 import { originDto } from '../Model/dto/origin-dto';
 import { DestinationDto } from '../Model/dto/destination-dto';
@@ -12,6 +12,7 @@ import swal from 'sweetalert2';
   styleUrls: ['./order-post-pack.component.css']
 })
 export class OrderPostPackComponent implements OnInit {
+  @ViewChild('f') mytemplateForm : any;
   mainPacks:MainPacks;
   Origin : originDto;
   destinationModel:DestinationDto;
@@ -29,6 +30,8 @@ constructor(
   this.Origin=new originDto();
   this.destinationModel=new DestinationDto();
   this.MultiplePacks=new MultiplePacksDto();
+  this.destinationModel.province="استان";
+  this.destinationModel.city="شهر";
  }
 
 ngOnInit() {
@@ -75,7 +78,7 @@ this.destinationModel.city=city;
 
 
 SelectProvince(province:string){
-this.destinationModel.city=undefined;
+this.destinationModel.city="شهر";
 
 this.destinationModel.province=province;
 this._webappService.getCities(province,this.typeCity).subscribe(res=>{
@@ -135,6 +138,17 @@ this.mainPacks.isCashPayment=chah;
 }
 
 onSubmit(){
+   
+  if(this.packs.length<=0){
+    swal.fire({
+      type: 'error',
+      title: 'خطا',
+      text: 'حداقل یک بسته اضافه کنید',
+   
+    })
+    return;
+  }
+  
   this.Origin.city="تهران";
   this.Origin.province="تهران";
   this.Origin.longitude="a";
@@ -142,6 +156,7 @@ onSubmit(){
   this.MultiplePacks.packs=this.packs;
 this.MultiplePacks.origin=this.Origin;
 this.MultiplePacks.destination=this.destinationModel;
+ 
 this.MultiplePacks.content=this.mainPacks.content;
 this.MultiplePacks.insurancePrice=this.mainPacks.insurancePrice;
 this.MultiplePacks.isInsurance=this.mainPacks.isInsurance;
@@ -153,12 +168,20 @@ this.MultiplePacks.payAtOrigin=this.mainPacks.payAtOrigin;
 
 swal.showLoading()
 this._webappService.PostPackSpa(this.MultiplePacks).subscribe(res=>{
- 
+  this.mytemplateForm.reset()
 this.Origin=new originDto();
 this.destinationModel=new DestinationDto();
 this.MultiplePacks=new MultiplePacksDto();
+this.mainPacks=new MainPacks();
+this.destinationModel.province="استان";
+this.destinationModel.city="شهر";
 this.packs=[];
 swal.close()
+swal.fire(
+  'موفقیت',
+  'مرسوله شما با موفقیت ثبت شد',
+  'success'
+)
 })
 }
 }
